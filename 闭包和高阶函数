@@ -74,3 +74,34 @@ function trottle (fn, interval) {
 window.onresize = trottle(function() {
     console.log(1)
 }, 500);
+
+4. 分时函数
+
+/**
+ * ary： 需要的数据
+ * fn: 创建节点逻辑的函数
+ * count：每一批创建节点的数量
+ * */
+var timeChunk = function(ary, fn, count) {
+    var obj, 
+        t;
+
+    var len = ary.length;
+    
+    var start = function() {
+        for (var i = 0; i < Math.min(count || 1, ary.length); i++) {
+            var obj = ary.shift();
+            fn(obj);
+        }
+    }
+
+
+    return function() {
+        t = setInterval(function() {
+            if (ary.length === 0) {
+                return clearInterval(t);
+            }
+            start();
+        }, 200);
+    };
+}

@@ -105,3 +105,21 @@ var timeChunk = function(ary, fn, count) {
         }, 200);
     };
 }
+
+5. 惰性加载函数
+惰性载入函数方案。首先函数依旧被声明为一个普通函数，在函数里
+依然有一些分支判断。但在第一次进入条件分支后，在函数内部会重写这个函数，
+重写之后的函数就是我们期望的函数，下次进入函数时就不存在条件分支语句
+
+var addEvent = function(elem, type, handler) {
+  if (window.addEventListener) {
+    addEvent = function(elem, type, handler) {
+      elem.addEventListener(type, handler, false)
+    }
+  }else if (window.attachEvent) {
+    addEvent = function(elem, type, handler) {
+      elem.attachEvent('on' + type, handler);
+    }
+  }
+  addEvent(elem, type, handler)
+}
